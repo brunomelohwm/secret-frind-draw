@@ -33,11 +33,20 @@ jobs:
       # - name: Setup Google Cloud SDK
       #   uses: google-github-actions/setup-gcloud@v0
 
-      - name: Run Unit tests
-        run: flutter test test/unit
+      - name: Run Lint
+        run: |
+          output=$(flutter analyze lib test | grep -v 'TODO:')
+          if [[ -n "$output" && ! "$output" =~ "No issues found!" ]]; then
+            echo "$output"
+            exit 1
+          fi
+      
 
-      - name: Run Widget tests
-        run: flutter test test/widget
+      - name: Run tests with coverage
+        run: |
+          flutter test --concurrency=2 --coverage
+          sudo apt-get install lcov
+          genhtml coverage/lcov.info -o coverage/html
       
       - name: Run Android integration tests
         run: ./integration_android.sh
