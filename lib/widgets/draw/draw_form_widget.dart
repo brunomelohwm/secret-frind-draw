@@ -92,6 +92,7 @@ class _DrawFormWidgetState extends State<DrawFormWidget> {
               ImageConstants.plane,
               height: 140,
             ),
+            Container(),
           ],
         ),
       ),
